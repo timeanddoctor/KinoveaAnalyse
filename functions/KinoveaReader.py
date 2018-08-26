@@ -5,16 +5,16 @@ import numpy as np
 
 # Read the XML file
 def read_xml_file(xml_path, reperes_anato):
-    # Note to the programmer
-    # The structure given by the XML file in Kinovea is a 5 level where
-    #   the 1st iterate on structure (3 is the actual Woorksheet)
-    #   the 3rd iterate on lines
-    #   the 4th iterate on columns
+     #注意程序员
+     #Kinovea中XML文件给出的结构是5级
+     #结构上的第一次迭代（3是实际的Woorksheet）
+     #行第3次迭代
+     #列上的第4次迭代
     ws = 3  # worksheet
     tree = ElementTree.parse(xml_path)
-    root = tree.getroot()[ws][0]  # We don't mind the first 2 columns of root
+    root = tree.getroot()[ws][0]  # We don't mind the first 2 columns of root 忽略前两列
     data = {}
-    data_to_stack = np.ndarray((3, 1))  # Declare data stacker that keeps being updated (Time, X, Y)
+    data_to_stack = np.ndarray((3, 1))  # Declare data stacker that keeps being updated (Time, X, Y)声明不断更新的数据堆栈器（时间，X，Y）
     for repere in reperes_anato:
         repere_found = False
         data_tp = np.ndarray((3, 0))  # Append all data
@@ -29,16 +29,14 @@ def read_xml_file(xml_path, reperes_anato):
                 break
             # Otherwise add data
             else:
-                data_to_stack[0, 0] = datetime.datetime.timestamp(
-                    datetime.datetime.strptime(root[i+3][2][0].text, "%H:%M:%S:%f")
-                )
+                data_to_stack[0, 0] = datetime.datetime.timestamp(datetime.datetime.strptime(root[i+3][2][0].text, "%H:%M:%S:%f")                )
                 data_to_stack[1, 0] = root[i+3][0][0].text
                 data_to_stack[2, 0] = root[i+3][1][0].text
                 data_tp = np.hstack((data_tp, data_to_stack))
 
         # If we get here and haven't found the repere, raise an error
         if not repere_found:
-            raise LookupError(repere + " n'a pas été trouvé dans le document")
+            raise LookupError(repere + " was not found in the document")
         data[repere] = data_tp  # Save the data
 
     # Find share timestamps

@@ -1,7 +1,7 @@
-# Ce script analyse des données de position fournies par le logiciel Kinovea (export XML)
-# Pour l'utiliser, assurez-vous que les labels utilisés dans Kinovea correspondent à ceux
-# inscrits dans la variable "reperes_anato" du présent logiciel
-# Le script retourne les graphiques de centre de masse, ainsi que les angles entre les segments
+#该脚本分析Kinovea软件提供的位置数据（XML导出）
+#要使用它，请确保Kinovea中使用的标签与这些标签相对应
+#在本软件的变量“reperes_anato”中注册
+#脚本返回质心图以及段之间的角度
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -58,20 +58,21 @@ com_i_ddot = BiomechanicsComputation.derivative(com_i_dot, time)
 grf = BiomechanicsComputation.compute_grf(com_ddot, masse)
 
 # Kinogramme
-plt.figure("Kinogramme du mouvement")
+plt.figure("Kinogram of the movement")
 plt.ylabel("Axe vertical (m)")
 plt.xlabel("Axe frontal (m)")
+#从0.88到0之间区数据data.shape[2]个
 couleurs = np.linspace(0.88, 0, data.shape[2])
 for i in range(data.shape[2]):
     plt.plot(data[0, stick, i], data[1, stick, i], color=[couleurs[i], couleurs[i], couleurs[i]])
-plt.axis('equal')
+plt.axis('equal')  #也就是说axis square刻度范围不一定一样，但是一定是方形的。axis equal刻度是等长的，但也不一定是方形的。
 
 # Output
-plt.figure("Analyse biomécanique de Kinovea")
+plt.figure("Kinovea生物力学分析")
 
 # Show model
 plt.subplot(131)
-plt.title("Position du corps à l'instant " + str(time_idx))
+plt.title("Kinovea Biomechanical Analysis " + str(time_idx))
 plt.ylabel("Axe vertical (m)")
 plt.xlabel("Axe frontal (m)")
 plt.plot(data[0, stick, time_idx], data[1, stick, time_idx], 'r')
@@ -79,22 +80,22 @@ plt.plot(com_i[0, :, time_idx], com_i[1, :, time_idx], 'k.')
 plt.plot(com[0, 0, time_idx], com[1, 0, time_idx], 'k.', markersize=20)
 plt.axis('equal')
 
-# Show some calculation
+# Show some calculation CoM高度
 plt.subplot(432)
-plt.title("Hauteur du CoM")
-plt.ylabel("Hauteur (m)")
+plt.title("CoM height")
+plt.ylabel("height (m)")
 plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
 plt.plot(time, com[1, 0, :])
 
 plt.subplot(435)
-plt.title("Vitesse verticale")
-plt.ylabel("Vitesse (m/s)")
+plt.title("Vertical speed")
+plt.ylabel("speed (m/s)")
 plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
 plt.plot(time, com_dot[1, 0, :])
 
 plt.subplot(438)
-plt.title("Accélération verticale")
-plt.ylabel("Accélération (m/s²)")
+plt.title("Vertical acceleration")
+plt.ylabel("acceleration (m/s²)")
 plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)
 plt.plot(time, com_ddot[1, 0, :])
 
@@ -105,9 +106,9 @@ plt.xlabel("Temps (s)")
 plt.plot(time, grf[1, 0, :])
 
 plt.subplot(1, 3, 3)
-plt.title("Angles articulaire au cours du temps")
+plt.title("Joint angles over time")
 plt.ylabel("Angle (°)")
-plt.xlabel("Temps (s)")
+plt.xlabel("Time (s)")
 for joint in angles.values():
     plt.plot(time, KinoveaReader.to_degree(joint))
 plt.legend(angles.keys())

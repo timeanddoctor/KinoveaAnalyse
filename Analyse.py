@@ -80,7 +80,7 @@ plt.plot(com_i[0, :, time_idx], com_i[1, :, time_idx], 'k.')
 plt.plot(com[0, 0, time_idx], com[1, 0, time_idx], 'k.', markersize=20)
 plt.axis('equal')
 
-# Show some calculation CoM高度
+# Show some calculation COM高度
 plt.subplot(432)
 plt.title("CoM height")
 plt.ylabel("height (m)")
